@@ -1,0 +1,594 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Stopdown Camera Rental</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lens-barrel hero with a day-rate readout, then a catalog beside a live quote slip. */
+:root {
+  --bg: #EBEEF0;
+  --surface: #F7F9FA;
+  --fg: #12161A;
+  --muted: #566069;
+  --line: #CBD2D8;
+  --accent: #2E44D8;
+  --accent-fg: #FFFFFF;
+  --ok: #1F7A4D;
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1316; --surface: #171C20; --fg: #E8ECEF; --muted: #9AA5AE; --line: #2B343B;
+    --accent: #7C8DFF; --accent-fg: #0B0F2E; --ok: #5FD09A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1316; --surface: #171C20; --fg: #E8ECEF; --muted: #9AA5AE; --line: #2B343B;
+  --accent: #7C8DFF; --accent-fg: #0B0F2E; --ok: #5FD09A; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 88px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.05; letter-spacing: -0.02em; }
+h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); }
+.label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; text-decoration: none; }
+.brand svg { width: 28px; height: 28px; flex: none; }
+.nav { display: flex; gap: 20px; font-size: 14px; font-weight: 500; flex-wrap: wrap; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav a:hover { color: var(--fg); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; padding-block: 36px 56px; }
+.hero > * { min-width: 0; }
+.hero h1 { font-size: clamp(40px, 7vw, 76px); font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p.lede { margin-top: 20px; max-width: 46ch; font-size: 18px; color: var(--muted); }
+.cta-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid var(--fg); background: transparent; padding: 12px 20px; font-weight: 600; font-size: 15px; cursor: pointer; text-decoration: none; border-radius: 4px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.btn:hover { filter: brightness(1.08); }
+.readout { background: var(--surface); border: 1.5px solid var(--fg); border-radius: 4px; padding: 20px; display: grid; gap: 14px; }
+.readout .lens { display: flex; justify-content: center; padding-block: 4px 8px; }
+.readout .lens svg { width: min(200px, 60%); height: auto; }
+.readout dl { margin: 0; display: grid; gap: 0; }
+.readout .row { display: flex; justify-content: space-between; gap: 12px; padding-block: 9px; border-top: 1px solid var(--line); font-size: 14px; }
+.readout .row dt { color: var(--muted); }
+.readout .row dd { margin: 0; font-family: var(--font-mono); font-size: 13px; text-align: right; }
+.readout .total { font-family: var(--font-display); font-weight: 800; font-size: 28px; border-top: 1.5px solid var(--fg); padding-top: 12px; display: flex; justify-content: space-between; align-items: baseline; }
+
+/* facts strip */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border-block: 1.5px solid var(--fg); }
+.facts div { padding: 18px 20px 18px 0; display: grid; gap: 4px; }
+.facts strong { font-family: var(--font-display); font-size: 20px; font-weight: 700; line-height: 1.2; }
+.facts span { font-size: 14px; color: var(--muted); }
+
+section { padding-block: 64px 0; }
+.sec-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 60ch; }
+.sec-head p { color: var(--muted); }
+
+/* gear + quote */
+.shop { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px; align-items: start; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip { border: 1.5px solid var(--line); background: transparent; padding: 7px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 16px; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; min-width: 0; }
+.item.in { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.item .meta { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.mount { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; padding: 2px 7px; border: 1px solid var(--line); border-radius: 3px; color: var(--muted); white-space: nowrap; }
+.item .spec { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.item .buy { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.price { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
+.price small { font-family: var(--font-mono); font-weight: 400; font-size: 11px; color: var(--muted); letter-spacing: 0; }
+.add { border: 1.5px solid var(--fg); background: transparent; padding: 7px 14px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
+.add[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+
+.slip { position: sticky; top: 16px; background: var(--surface); border: 1.5px solid var(--fg); border-radius: 4px; padding: 20px; display: grid; gap: 14px; min-width: 0; }
+.slip h3 { font-size: 22px; }
+.slip ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.slip li { display: flex; justify-content: space-between; gap: 10px; padding-block: 8px; border-top: 1px solid var(--line); font-size: 14px; align-items: center; }
+.slip li span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.slip .empty { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+.rm { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px 6px; }
+.rm:hover { color: var(--fg); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--line); border-radius: 4px; padding: 9px 10px; font-size: 15px; }
+.field textarea { resize: vertical; min-height: 64px; }
+.sum { display: grid; gap: 0; }
+.sum .row { display: flex; justify-content: space-between; gap: 10px; padding-block: 6px; font-size: 14px; }
+.sum .row span:last-child { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.sum .grand { border-top: 1.5px solid var(--fg); margin-top: 6px; padding-top: 10px; font-family: var(--font-display); font-weight: 800; font-size: 24px; }
+.sum .grand span:last-child { font-family: var(--font-display); }
+.note { font-size: 13px; color: var(--muted); }
+.out { display: grid; gap: 8px; }
+.out pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--font-mono); font-size: 12.5px; background: var(--bg); border: 1px dashed var(--muted); padding: 12px; border-radius: 4px; }
+.err { color: #B3261E; font-size: 13px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err { color: #FF8A80; } }
+:root[data-theme="dark"] .err { color: #FF8A80; }
+
+/* reviews */
+.reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.review { border: 1.5px dashed var(--muted); border-radius: 4px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.review p { margin: 0; color: var(--muted); }
+.review .stars { font-size: 20px; letter-spacing: 0.15em; color: var(--accent); }
+.review .who { font-size: 12.5px; }
+
+/* booking */
+.book { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px; align-items: start; }
+.bform { display: grid; gap: 18px; min-width: 0; }
+.bsum { position: sticky; top: 16px; background: var(--surface); border: 1.5px solid var(--fg); border-radius: 4px; padding: 20px; display: grid; gap: 12px; min-width: 0; }
+.bsum h3 { font-size: 22px; }
+.bsum ul { list-style: none; margin: 0; padding: 0; }
+.bsum li { display: flex; justify-content: space-between; gap: 10px; padding-block: 7px; border-top: 1px solid var(--line); font-size: 14px; }
+.bsum li span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--muted); }
+.check input { margin-top: 4px; flex: none; }
+@media (max-width: 960px) { .book { grid-template-columns: 1fr; } .bsum { position: static; } }
+
+/* rates + steps */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.two > * { min-width: 0; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; border-bottom: 1.5px solid var(--fg); }
+td.mono { font-size: 14px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding-block: 16px; border-top: 1px solid var(--line); }
+.steps li::before { content: counter(s); font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1; color: var(--accent); }
+.steps strong { display: block; font-family: var(--font-display); font-size: 18px; margin-bottom: 2px; }
+.steps span { color: var(--muted); font-size: 15px; }
+
+details { border-top: 1px solid var(--line); padding-block: 16px; }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; font-size: 18px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); }
+details[open] summary::after { content: "\2212"; }
+details p { margin-top: 10px; color: var(--muted); max-width: 66ch; }
+
+footer { margin-top: 72px; border-top: 1.5px solid var(--fg); padding-block: 28px 40px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+footer .mono { color: var(--fg); user-select: all; }
+
+.bar { display: none; position: fixed; left: 0; right: 0; bottom: 0; background: var(--fg); color: var(--bg); padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); justify-content: space-between; align-items: center; gap: 12px; z-index: 5; text-decoration: none; font-weight: 600; }
+.bar .mono { font-size: 14px; }
+
+@media (max-width: 960px) {
+  .hero, .two { grid-template-columns: 1fr; }
+  .shop { grid-template-columns: 1fr; }
+  .slip { position: static; }
+  .bar { display: flex; }
+}
+@media (max-width: 480px) {
+  .fields { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top" id="top" aria-label="Stopdown Camera Rental home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="16" cy="16" r="5" fill="var(--accent)"/></svg>
+      Stopdown
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#top">Home</a>
+      <a href="#equipments">Equipments</a>
+      <a href="#how">How to rent</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#book">Book now</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="label">Camera and lens rental</p>
+      <h1 style="margin-top:14px">Pro cameras by the day. <em>Skip the purchase.</em></h1>
+      <p class="lede">Rent cinema bodies, fast zooms, lights and audio for a shoot, a wedding or a weekend. Every kit is cleaned, tested and checked against a list before it leaves.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#equipments">Build your kit</a>
+        <a class="btn" href="#rates">See rates</a>
+      </div>
+    </div>
+    <aside class="readout" aria-label="Example rental quote">
+      <div class="lens">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="94" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="100" cy="100" r="78" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round">
+            <polygon points="100,38 143,62 143,100 118,100 100,70"/>
+            <polygon points="143,62 162,100 143,138 118,118 118,100"/>
+            <polygon points="143,138 100,162 57,138 82,118 118,118"/>
+            <polygon points="57,138 38,100 57,62 82,82 82,118"/>
+            <polygon points="57,62 100,38 100,70 82,82"/>
+          </g>
+          <circle cx="100" cy="100" r="16" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <p class="label">Sample kit · 3 days</p>
+      <dl id="heroRows"></dl>
+      <div class="total"><span>Rental</span><span id="heroTotal"></span></div>
+    </aside>
+  </div>
+
+  <div class="facts">
+    <div><strong>Tested every return</strong><span>Sensor, shutter count and lens elements checked.</span></div>
+    <div><strong>3 days billed as 2.5</strong><span>Longer rentals cost less per day.</span></div>
+    <div><strong>Spare batteries included</strong><span>Plus card, charger and bag with every body.</span></div>
+    <div><strong>Pickup by appointment</strong><span>Hands-on walkthrough at the counter.</span></div>
+  </div>
+
+  <section id="equipments">
+    <div class="sec-head">
+      <h2>Equipments</h2>
+      <p>Add items to your quote slip. Rates are per day and the slip updates as you go.</p>
+    </div>
+    <div class="shop">
+      <div>
+        <div class="chips" id="chips" role="group" aria-label="Filter gear by type"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <aside class="slip" id="quote" aria-label="Your quote slip">
+        <h3>Your quote</h3>
+        <ul id="slipList"></ul>
+        <div class="fields">
+          <div class="field"><label for="pickup">Pickup</label><input type="date" id="pickup"></div>
+          <div class="field"><label for="days">Days</label>
+            <select id="days"></select></div>
+        </div>
+        <div class="sum" id="sum"></div>
+        <a class="btn primary" href="#book">Continue to booking</a>
+        <p class="note">Sample rates and inventory. Final price is confirmed when we hold your dates.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="book">
+    <div class="sec-head">
+      <h2>Book now</h2>
+      <p>Choose your gear above, then tell us who you are and when you need it. Nothing is charged until we confirm your dates.</p>
+    </div>
+    <div class="book">
+      <form id="bookForm" class="bform" novalidate>
+        <div class="fields">
+          <div class="field full"><label for="fullName">Full name</label><input id="fullName" autocomplete="name" required></div>
+          <div class="field"><label for="mobile">Mobile number</label><input id="mobile" type="tel" autocomplete="tel" inputmode="tel" required></div>
+          <div class="field"><label for="email">Email (optional)</label><input id="email" type="email" autocomplete="email"></div>
+          <div class="field"><label for="pickTime">Pickup time</label><select id="pickTime"></select></div>
+          <div class="field"><label for="purpose">What is it for?</label>
+            <select id="purpose">
+              <option>Photo shoot</option><option>Video or film</option><option>Wedding</option><option>Event</option><option>Travel</option><option>Other</option>
+            </select></div>
+          <div class="field full"><label for="handover">Handover</label>
+            <select id="handover"><option value="counter">I will pick it up at the counter</option><option value="delivery">Please quote delivery</option></select></div>
+          <div class="field full" id="addrWrap" hidden><label for="address">Delivery address</label><textarea id="address"></textarea></div>
+          <div class="field full"><label for="bnotes">Notes</label><textarea id="bnotes" placeholder="Shoot location, accessories you need, anything we should know"></textarea></div>
+        </div>
+        <label class="check"><input type="checkbox" id="agree"> <span>I will bring a valid government ID, pay the refundable deposit at pickup, and return the gear on time. Late days are billed as extra days.</span></label>
+        <p class="err" id="bookErr" role="alert" hidden></p>
+        <div><button class="btn primary" type="submit">Request this booking</button></div>
+        <div class="out" id="bookOut" hidden>
+          <p class="label">Request ready · <span id="bookRef"></span></p>
+          <p class="note">Nothing has been sent yet. Copy this request and send it to <span class="mono">hello@stopdown.example</span> or message us. We reply to confirm availability and hold your gear.</p>
+          <pre id="bookText"></pre>
+          <div><button class="btn" type="button" id="bookCopy">Copy request</button></div>
+        </div>
+      </form>
+      <aside class="bsum" id="bookSummary" aria-label="Your booking summary"></aside>
+    </div>
+  </section>
+
+  <section id="rates">
+    <div class="two">
+      <div>
+        <div class="sec-head">
+          <h2>Longer costs less per day</h2>
+          <p>Billed days are multiples of the day rate. A kit at ₱1,000 a day costs the amounts below.</p>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Days kept</th><th>Billed as</th><th>Kit at ₱1,000/day</th></tr></thead>
+            <tbody id="rateRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head">
+          <h2>Deposit and ID</h2>
+          <p>A refundable deposit equal to 30% of the rental (minimum ₱2,000) is held at pickup and returned when the kit comes back complete. Bring one valid government ID. A day is 24 hours from pickup.</p>
+        </div>
+        <div class="tablewrap">
+          <table>
+            <tbody>
+              <tr><td>Late return</td><td class="mono">1 extra day billed per day late</td></tr>
+              <tr><td>Cancel 48h+ before</td><td class="mono">Free</td></tr>
+              <tr><td>Cancel under 48h</td><td class="mono">1 day charged</td></tr>
+              <tr><td>Damage or loss</td><td class="mono">Repair or replacement cost</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="two">
+      <div class="sec-head">
+        <h2>How to rent</h2>
+        <p>Four steps, in this order. Most holds are confirmed the same day.</p>
+      </div>
+      <ol class="steps">
+        <li><div><strong>Build your quote</strong><span>Choose gear, pickup date and number of days.</span></div></li>
+        <li><div><strong>We confirm and hold</strong><span>We check the calendar and reply with a final price.</span></div></li>
+        <li><div><strong>Pick up with a walkthrough</strong><span>Show your ID, pay the deposit, test every item at the counter.</span></div></li>
+        <li><div><strong>Return and get your deposit back</strong><span>We check the kit against the list and refund the deposit.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="sec-head">
+      <h2>Reviews</h2>
+      <p>Reviews from real renters go here after each rental. The cards below are empty templates until you add your own.</p>
+    </div>
+    <div class="reviews">
+      <article class="review"><span class="label">Template</span><p class="stars mono" aria-hidden="true">☆☆☆☆☆</p><p>Paste a real customer review here.</p><p class="who mono">Customer name · Kit rented</p></article>
+      <article class="review"><span class="label">Template</span><p class="stars mono" aria-hidden="true">☆☆☆☆☆</p><p>Paste a real customer review here.</p><p class="who mono">Customer name · Kit rented</p></article>
+      <article class="review"><span class="label">Template</span><p class="stars mono" aria-hidden="true">☆☆☆☆☆</p><p>Paste a real customer review here.</p><p class="who mono">Customer name · Kit rented</p></article>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sec-head"><h2>Questions</h2></div>
+    <details><summary>Do you rent to first-timers?</summary><p>Yes. Bring a valid ID and pay the deposit. We run a short walkthrough on each body so you know the menus before you leave.</p></details>
+    <details><summary>What if I need the gear for a few hours only?</summary><p>The minimum is one day. If you return it the same evening, you still pay one day.</p></details>
+    <details><summary>Is insurance included?</summary><p>No. The deposit covers minor wear. You are responsible for loss or damage, so check whether your own insurance covers rented equipment for the dates you need.</p></details>
+    <details><summary>Which lens mounts do you stock?</summary><p>Each equipment card shows its mount, so you can check a lens fits the camera you are renting.</p></details>
+    <details><summary>Can you deliver?</summary><p>Pickup is at our counter. Ask in your request notes if you need delivery and we will quote it separately.</p></details>
+  </section>
+
+  <footer>
+    <div>
+      <strong style="color:var(--fg);font-family:var(--font-display);font-size:18px">Stopdown Camera Rental</strong><br>
+      Open by appointment, Monday to Saturday.
+    </div>
+    <div>
+      <span class="mono">hello@stopdown.example</span><br>
+      <span class="mono">0900 000 0000</span><br>
+      <a href="#rates">Rates</a> · <a href="#faq">FAQ</a>
+    </div>
+  </footer>
+</div>
+
+<a class="bar" href="#quote" id="bar"><span id="barCount">0 items</span><span class="mono" id="barTotal">₱0</span></a>
+
+<script>
+(function () {
+  var GEAR = [
+    { id: "fx3", cat: "Cameras", name: "Sony FX3", spec: "Full-frame cinema · 4K 120p · 10-bit", mount: "Sony E", rate: 4500 },
+    { id: "gm2470", cat: "Lenses", name: "Sony 24-70mm f/2.8 GM II", spec: "Standard zoom · f/2.8 constant", mount: "Sony E", rate: 1800 },
+    { id: "a300", cat: "Lighting", name: "Aputure 300d II", spec: "300 W daylight LED · Bowens mount", mount: "Bowens", rate: 2000 }
+  ];
+  var CATS = ["All", "Cameras", "Lenses", "Lighting", "Audio", "Support"];
+  var BILLED = [0, 1, 2, 2.5, 3, 3.5, 3.75, 4];
+  var DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 10, 14, 21, 30];
+  var DEPOSIT_RATE = 0.3, DEPOSIT_MIN = 2000;
+
+  var filter = "All";
+  var cart = {};
+  var lastText = "";
+
+  function $(id) { return document.getElementById(id); }
+  function peso(n) { return "₱" + Math.round(n).toLocaleString("en-PH"); }
+  function billed(d) {
+    if (d <= 7) return BILLED[d];
+    return 4 * Math.floor(d / 7) + BILLED[d % 7];
+  }
+  function fmtBilled(b) { return (b % 1 === 0 ? b : b.toString()) + "×"; }
+  function cartItems() { return GEAR.filter(function (g) { return cart[g.id]; }); }
+  function dayRateTotal() { return cartItems().reduce(function (s, g) { return s + g.rate; }, 0); }
+  function days() { return parseInt($("days").value, 10) || 1; }
+
+  /* hero sample */
+  (function () {
+    var sample = GEAR.slice(0, 3);
+    var day = sample.reduce(function (s, g) { return s + g.rate; }, 0);
+    $("heroRows").innerHTML = sample.map(function (g) {
+      return '<div class="row"><dt>' + g.name + '</dt><dd>' + peso(g.rate) + '/day</dd></div>';
+    }).join("") + '<div class="row"><dt>Day rate × 2.5</dt><dd>' + peso(day) + ' × 2.5</dd></div>';
+    $("heroTotal").textContent = peso(day * billed(3));
+  })();
+
+  /* rate table */
+  $("rateRows").innerHTML = [1, 2, 3, 5, 7, 14].map(function (d) {
+    var b = billed(d);
+    return '<tr><td>' + d + (d === 1 ? ' day' : ' days') + '</td><td class="mono">' + fmtBilled(b) + '</td><td class="mono">' + peso(1000 * b) + '</td></tr>';
+  }).join("");
+
+  /* chips */
+  function renderChips() {
+    $("chips").innerHTML = CATS.filter(function (c) { return c === "All" || GEAR.some(function (g) { return g.cat === c; }); }).map(function (c) {
+      return '<button type="button" class="chip" data-cat="' + c + '" aria-pressed="' + (c === filter) + '">' + c + '</button>';
+    }).join("");
+  }
+  $("chips").addEventListener("click", function (e) {
+    var b = e.target.closest(".chip");
+    if (!b) return;
+    filter = b.getAttribute("data-cat");
+    renderChips(); renderGrid();
+  });
+
+  /* grid */
+  function renderGrid() {
+    $("grid").innerHTML = GEAR.filter(function (g) { return filter === "All" || g.cat === filter; }).map(function (g) {
+      var on = !!cart[g.id];
+      return '<article class="item' + (on ? ' in' : '') + '">' +
+        '<div class="meta"><h3>' + g.name + '</h3><span class="mount">' + g.mount + '</span></div>' +
+        '<p class="spec">' + g.spec + '</p>' +
+        '<div class="buy"><span class="price">' + peso(g.rate) + ' <small>/ day</small></span>' +
+        '<button type="button" class="add" data-id="' + g.id + '" aria-pressed="' + on + '">' + (on ? 'Added' : 'Add') + '</button></div>' +
+        '</article>';
+    }).join("");
+  }
+  $("grid").addEventListener("click", function (e) {
+    var b = e.target.closest(".add");
+    if (!b) return;
+    var id = b.getAttribute("data-id");
+    if (cart[id]) delete cart[id]; else cart[id] = true;
+    renderGrid(); renderSlip();
+  });
+
+  /* slip */
+  function renderSlip() {
+    var items = cartItems();
+    $("slipList").innerHTML = items.length
+      ? items.map(function (g) {
+          return '<li><span>' + g.name + '</span><span class="mono">' + peso(g.rate) +
+            ' <button type="button" class="rm" data-id="' + g.id + '" aria-label="Remove ' + g.name + '">×</button></span></li>';
+        }).join("")
+      : '<li class="empty">Nothing added yet. Choose gear from the list.</li>';
+
+    var d = days(), b = billed(d), day = dayRateTotal(), rental = day * b;
+    var dep = items.length ? Math.max(DEPOSIT_MIN, rental * DEPOSIT_RATE) : 0;
+    $("sum").innerHTML =
+      '<div class="row"><span>Day rate</span><span>' + peso(day) + '</span></div>' +
+      '<div class="row"><span>' + d + (d === 1 ? ' day' : ' days') + ' billed as</span><span>' + fmtBilled(b) + '</span></div>' +
+      '<div class="row grand"><span>Rental</span><span>' + peso(rental) + '</span></div>' +
+      '<div class="row"><span>Refundable deposit</span><span>' + peso(dep) + '</span></div>';
+    $("barCount").textContent = items.length + (items.length === 1 ? " item" : " items");
+    $("barTotal").textContent = peso(rental);
+    renderBookSummary();
+  }
+  $("slipList").addEventListener("click", function (e) {
+    var b = e.target.closest(".rm");
+    if (!b) return;
+    delete cart[b.getAttribute("data-id")];
+    renderGrid(); renderSlip();
+  });
+
+  /* day + date inputs */
+  $("days").innerHTML = DAY_OPTIONS.map(function (d) {
+    return '<option value="' + d + '"' + (d === 3 ? ' selected' : '') + '>' + d + (d === 1 ? ' day' : ' days') + '</option>';
+  }).join("");
+  $("days").addEventListener("change", renderSlip);
+  (function () {
+    var t = new Date(); t.setDate(t.getDate() + 1);
+    var m = String(t.getMonth() + 1).padStart(2, "0"), dd = String(t.getDate()).padStart(2, "0");
+    var iso = t.getFullYear() + "-" + m + "-" + dd;
+    $("pickup").value = iso; $("pickup").min = iso;
+  })();
+
+  /* sample starting kit so the slip is never empty */
+  GEAR.slice(0, 2).forEach(function (g) { cart[g.id] = true; });
+
+  /* booking form */
+  var TIMES = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
+  $("pickTime").innerHTML = TIMES.map(function (t) { return "<option>" + t + "</option>"; }).join("");
+
+  function addDaysIso(iso, n) {
+    var p = iso.split("-"), d = new Date(+p[0], +p[1] - 1, +p[2] + n);
+    return d;
+  }
+  function longDate(d) { return d.toLocaleDateString("en-PH", { weekday: "short", month: "short", day: "numeric" }); }
+
+  function renderBookSummary() {
+    var box = $("bookSummary"), items = cartItems(), d = days(), pick = $("pickup").value;
+    if (!items.length) {
+      box.innerHTML = '<h3>Your booking</h3><p class="note">No equipment selected yet.</p><a class="btn" href="#equipments">Choose equipment</a>';
+      return;
+    }
+    var b = billed(d), day = dayRateTotal(), rental = day * b, dep = Math.max(DEPOSIT_MIN, rental * DEPOSIT_RATE);
+    var when = pick ? longDate(addDaysIso(pick, 0)) + " to " + longDate(addDaysIso(pick, d)) : "Choose a pickup date above";
+    box.innerHTML = '<h3>Your booking</h3>' +
+      '<ul>' + items.map(function (g) { return "<li><span>" + g.name + '</span><span class="mono">' + peso(g.rate) + "</span></li>"; }).join("") + "</ul>" +
+      '<div class="sum">' +
+      '<div class="row"><span>When</span><span>' + when + "</span></div>" +
+      '<div class="row"><span>' + d + (d === 1 ? " day" : " days") + " billed as</span><span>" + fmtBilled(b) + "</span></div>" +
+      '<div class="row grand"><span>Rental</span><span>' + peso(rental) + "</span></div>" +
+      '<div class="row"><span>Refundable deposit</span><span>' + peso(dep) + "</span></div></div>" +
+      '<a class="btn small" href="#equipments">Change gear or dates</a>';
+  }
+
+  $("pickup").addEventListener("change", renderSlip);
+  $("handover").addEventListener("change", function () {
+    $("addrWrap").hidden = $("handover").value !== "delivery";
+  });
+
+  $("bookForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var err = $("bookErr"), items = cartItems();
+    var name = $("fullName").value.trim(), mobile = $("mobile").value.trim(), email = $("email").value.trim();
+    function fail(msg) { err.textContent = msg; err.hidden = false; }
+    if (!items.length) return fail("Choose at least one item under Equipments.");
+    if (!$("pickup").value) return fail("Choose a pickup date in your quote.");
+    if (!name) return fail("Enter your full name.");
+    if (mobile.replace(/\D/g, "").length < 7) return fail("Enter a mobile number we can reach you on.");
+    if (email && email.indexOf("@") < 1) return fail("Check your email address.");
+    if ($("handover").value === "delivery" && !$("address").value.trim()) return fail("Enter the delivery address.");
+    if (!$("agree").checked) return fail("Tick the box to confirm the ID, deposit and return terms.");
+    err.hidden = true;
+
+    var d = days(), b = billed(d), day = dayRateTotal(), rental = day * b, dep = Math.max(DEPOSIT_MIN, rental * DEPOSIT_RATE);
+    var ref = "SD-" + Math.random().toString(36).slice(2, 7).toUpperCase();
+    var notes = $("bnotes").value.trim();
+    var lines = [
+      "RENTAL REQUEST (ref " + ref + ")",
+      "Name: " + name,
+      "Contact: " + mobile + (email ? " / " + email : ""),
+      "Pickup: " + $("pickup").value + " \u00b7 " + d + (d === 1 ? " day" : " days"),
+      "Pickup time: " + $("pickTime").value,
+      "Return due: " + longDate(addDaysIso($("pickup").value, d)),
+      "Handover: " + ($("handover").value === "delivery" ? "Delivery to " + $("address").value.trim().replace(/\s+/g, " ") : "Counter pickup"),
+      "Purpose: " + $("purpose").value,
+      "",
+      items.map(function (g) { return "- " + g.name + " (" + peso(g.rate) + "/day)"; }).join("\n"),
+      "",
+      "Rental: " + peso(rental) + " (" + fmtBilled(b) + " day rate)",
+      "Deposit: " + peso(dep) + " refundable"
+    ];
+    if (notes) lines.push("Notes: " + notes.replace(/\s+/g, " "));
+    lastText = lines.join("\n");
+    $("bookRef").textContent = ref;
+    $("bookText").textContent = lastText;
+    $("bookOut").hidden = false;
+    $("bookOut").scrollIntoView({ block: "nearest" });
+  });
+
+  $("bookCopy").addEventListener("click", function () {
+    var btn = $("bookCopy");
+    function done(ok) { btn.textContent = ok ? "Copied" : "Select the text above and copy it"; setTimeout(function () { btn.textContent = "Copy request"; }, 2200); }
+    function select() {
+      var r = document.createRange(); r.selectNodeContents($("bookText"));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); done(false);
+    }
+    try { navigator.clipboard.writeText(lastText).then(function () { done(true); }, select); } catch (x) { select(); }
+  });
+
+  renderChips(); renderGrid(); renderSlip();
+})();
+</script>
+
+</body></html>
